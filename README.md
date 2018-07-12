@@ -5,7 +5,7 @@ a simple script that uses GCC's header listing capability and grep to find where
 ### arguments:
     ./hdigest.py [-I extra_include_dir] <sourcefile> <PERL-like regex pattern>
 
-###usage example:
+### usage example:
     $> ./hdigest.py -I /usr/include/ pipe.c 's\w+ stat'
 
     /usr/include/bits/waitstatus.h

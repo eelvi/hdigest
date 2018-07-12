@@ -1,8 +1,7 @@
 #!/bin/env python3
 
 from subprocess import *
-import sys, os, os.path, re
-from os.path import join,abspath
+import sys, re
 
 
 def error_print(*args, **kwargs):
@@ -20,11 +19,10 @@ def main():
         error_print('uage: ./script [-I dirs] sourcefile.c <perl_regex_pattern>', do_exit=True)
     moar_include_dirs,source_file,pattern = sys.argv[1:-2] , sys.argv[-2], sys.argv[-1]
 
-    headers_job = run(['gcc', *moar_include_dirs, '-H', source_file], stdout=PIPE,  stderr=STDOUT)
+    headers_job = run(['gcc', *moar_include_dirs, '-H', source_file, '-o', '/dev/null'], stderr=STDOUT, stdout=PIPE  )
     headers_out = headers_job.stdout.decode('utf-8','ignore')
 
     header_files = set()
-    matching_files =[] 
 
     for hline in headers_out.split('\n'):
         if '!' in hline:
@@ -38,12 +36,11 @@ def main():
     for hpath in header_files:
         temp_process = run(args=['grep', '-P', pattern, hpath], stderr=STDOUT, stdout=DEVNULL)
         if temp_process.returncode == 0:
-            matching_files.append(hpath)
+            print(hpath)
 
     debug = False
     if debug:
         print(*header_files, sep='\n||')
-    print(*matching_files, sep='\n')
 
 
 
